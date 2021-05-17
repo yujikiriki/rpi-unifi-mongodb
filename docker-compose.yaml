@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+    mongod:
+        image: kirinet-mongo:0.1
+        privileged: true
+        init: true
+        container_name: mongo
+        restart: always   
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: test
+            MONGO_INITDB_ROOT_PASSWORD: test
+            MONGO_INITDB_DATABASE: admin
+        volumes:
+            - db_data:/root/data
+            - db_logs:/root/logs
+            - ./mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+        ports:
+            - 27017:27017
+    unifi:
+        image: kirinet-unifi:0.3
+        container_name: unifi
+        restart: always
+        volumes:
+            - config:/var/lib/unifi
+            - log:/usr/lib/unifi/logs
+            - run:/usr/lib/unifi/run
+            - work:/usr/lib/unifi/work
+        ports:
+            - 443:443           # Port used for Remote Access service.
+            - 3478:3478/udp     # Port used for STUN.
+            - 5514:5514         # Port used for remote syslog capture.
+            - 8080:8080         # Port used for device and controller communication.
+            - 8443:8443         # Port used for controller GUI/API as seen in a web browser
+            - 8843:8843         # Port used for HTTPS portal redirection.
+            - 8880:8880         # Port used for HTTP portal redirection.
+            - 8883:8883         # Port used for Remote Access service.
+            - 6789:6789         # Port used for UniFi mobile speed test.
+            - 5656:5656/udp     # Ports used by AP-EDU broadcasting.
+            - 5699:5699/udp     # ibid     
+            - 10001:10001/udp   # Port used for device discovery
+            - 1900:1900/udp     # Port used for "Make controller discoverable on L2 network" in controller settings.
+
+volumes:
+    config:
+        driver: local
+    log:
+        driver: local
+    run:
+        driver: local
+    work:
+        driver: local
+    db_data:
+        driver: local
+    db_logs:
+        driver: local

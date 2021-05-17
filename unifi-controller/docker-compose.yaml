@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+    unifi:
+        image: kirinet-unifi:0.3
+        container_name: unifi
+        restart: always
+        network_mode: host
+        volumes:
+            - config:/var/lib/unifi
+            - log:/usr/lib/unifi/logs
+            - run:/usr/lib/unifi/run
+            - work:/usr/lib/unifi/work
+volumes:
+    config:
+        driver: local
+    log:
+        driver: local
+    run:
+        driver: local
+    work:
+        driver: local

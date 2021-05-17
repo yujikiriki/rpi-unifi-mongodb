@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+    mongod:
+        image: kirinet-mongo:0.1
+        privileged: true
+        init: true
+        container_name: mongo
+        restart: always
+        restart: always
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: test
+          MONGO_INITDB_ROOT_PASSWORD: test
+          MONGO_INITDB_DATABASE: admin
+        deploy:
+          replicas: 1
+        volumes:
+          - db_data:/root/data
+          - db_logs:/root/logs
+          - ../mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+        ports:
+          - 27017:27017
+
+volumes:
+    db_data:
+        driver: local
+    db_logs:
+        driver: local
